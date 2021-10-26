@@ -5,6 +5,7 @@ Program which converts vob files to mkv
 # Imports
 import os
 from makemkv import MakeMKV
+from makemkv import ProgressParser
 
 # install git live plugin for pycharm
 # https://pypi.org/project/makemkv/
@@ -26,6 +27,8 @@ def draw_file_tree(path: str, depth: int) -> None:
             name, ext = os.path.splitext(f)
             if os.path.isfile(f):
                 print("  " * depth + "-" + f)
+                if is_movie_to_convert():
+                    convert_movie(path, name, ext)
             elif os.path.isdir(f):
                 print("  " * depth + "-" + name)
                 draw_file_tree(path + f"/{name}", depth + 1)
@@ -34,5 +37,15 @@ def draw_file_tree(path: str, depth: int) -> None:
     except FileNotFoundError:
         # if the files starts with . - the program thinks it is a folder. This try except-block resolves it
         print("  " * depth + "-" + path.split("/")[-1])
+
+
+def is_movie_to_convert(path: str, name: str, extension: str) -> bool:
+    pass
+
+
+def convert_movie(path: str) -> None:
+    with ProgressParser() as progress:
+        makemkv = MakeMKV(0, progress_handler=progress.parse_progress)
+        makemkv.mkv(0, path)
 
 draw_file_tree(os.getcwd(), 0)

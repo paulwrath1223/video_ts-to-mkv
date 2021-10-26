@@ -22,21 +22,17 @@ def draw_file_tree(path: str, depth: int) -> None:
         how deep from mother folder the program currently is
     :return:
     """
-    try:
-        for f in os.listdir(r"" + path):
-            name, ext = os.path.splitext(f)
-            if os.path.isfile(f):
-                print("  " * depth + "-" + f)
-                if is_movie_to_convert():
-                    convert_movie(path, name, ext)
-            elif os.path.isdir(f):
-                print("  " * depth + "-" + name)
-                draw_file_tree(path + f"/{name}", depth + 1)
-            else:
-                print("  " * depth + "-" + name + " !(Is not file nor folder)")
-    except FileNotFoundError:
-        # if the files starts with . - the program thinks it is a folder. This try except-block resolves it
-        print("  " * depth + "-" + path.split("/")[-1])
+    for f in os.listdir(r"" + path):
+        name, ext = os.path.splitext(f)
+        if os.path.isfile(f):
+            print("  " * depth + "-" + f)
+            if is_movie_to_convert(path, name, ext):
+                convert_movie(path)
+        elif os.path.isdir(f):
+            print("  " * depth + "-" + name)
+            draw_file_tree(path + f"/{name}", depth + 1)
+        else:
+            print("  " * depth + "-" + name + " !(Is not file nor folder)")
 
 
 def is_movie_to_convert(path: str, name: str, extension: str) -> bool:
